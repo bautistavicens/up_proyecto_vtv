@@ -108,3 +108,69 @@ INSERT INTO `employee` (`employee_id`, `first_name`, `last_name`, `email`, `pass
     
 /*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
+
+
+
+	/*test - Table*/
+DROP TABLE IF EXISTS `test`;
+CREATE TABLE `test`(
+	`test_id` SMALLINT(3) NOT NULL AUTO_INCREMENT,
+    `description` VARCHAR(80) NOT NULL,
+	
+    PRIMARY KEY (`test_id`)
+    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+################## Dumping Data ##################
+
+LOCK TABLES `test` WRITE;
+/*!40000 ALTER TABLE `test` DISABLE KEYS */;
+
+INSERT INTO `test` (`test_id`,  `description`) VALUES 
+	(1, 'Emisión de gases'),
+    (2, 'Emisión de ruidos'),
+    (3, 'Sistema de dirección'),
+    (4, 'Tren delantero'),
+    (5, 'Frenos'),
+    (6, 'Suspensión'),
+    (7, 'Chasis'),
+    (8, 'Neumáticos'),
+    (9, 'Llantas'),
+    (10, 'Luces'),
+    (11, 'Seguridad'),
+    (12, 'Elementos de emergencia');
+    
+/*!40000 ALTER TABLE `test` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
+	/*evaluation - Table*/
+DROP TABLE IF EXISTS `evaluation`;
+CREATE TABLE `evaluation`(
+	`license_plate` VARCHAR(8) NOT NULL,
+    `test_id` SMALLINT(3) NOT NULL,
+	`score` SMALLINT(3) NOT NULL,
+    `employee_id` SMALLINT(3) NOT NULL,
+    `branch_id`SMALLINT(3) NOT NULL,
+    
+	PRIMARY KEY (`license_plate`, `test_id`),
+	FOREIGN KEY (`license_plate`) REFERENCES vehicle(`license_plate`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (`test_id`) REFERENCES test(`test_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (`employee_id`) REFERENCES employee(`employee_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+	FOREIGN KEY (`branch_id`) REFERENCES branch(`branch_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+################## Dumping Data ##################
+
+LOCK TABLES `evaluation` WRITE;
+/*!40000 ALTER TABLE `evaluation` DISABLE KEYS */;
+
+INSERT INTO `evaluation` (`license_plate`,  `test_id`, `score`, `employee_id`, `branch_id`) VALUES 
+	("AC189CZ", 1, 10, 2, 3);
+    
+/*!40000 ALTER TABLE `evaluation` ENABLE KEYS */;
+UNLOCK TABLES;

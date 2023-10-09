@@ -14,9 +14,9 @@ const carRouter = require('./carRouter');
 /*---------------------- Routes ----------------------*/
 router.use('/car', carRouter);
 
-//router.use('/appointment');
+router.use('/appointment');
 
-//router.use('/branch');
+router.use('/branch');
 
 //router.use('/employee');
 

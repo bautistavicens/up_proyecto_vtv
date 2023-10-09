@@ -8,14 +8,11 @@ const express = require("express");
 const router = express.Router();
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-//Get all appointments 
+//Get all evaluations
 router.get('/',);
 
-//Get all appointment possible status
-router.get('/status',);
-
-//Get all free appointments
-router.get('/available',);
+//Get all test of an evaluation
+router.get('/test',);
 
 //Get all free appointments from branch
 router.get('/available/:branch',);
@@ -26,5 +23,7 @@ router.get('/available/:branch/:date',);
 //Get all appointments from specific date
 router.get('/:date',);
 
+
+
 //add an available appointment to branch
-router.post('/:branch'),
+router.post('/:branch')
