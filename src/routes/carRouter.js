@@ -21,13 +21,13 @@ router.get('/:licenceplate', (req, res) => {
 
 
 //get appointment date data from a specific car
-router.get('/:licenceplate/appointment');
+//router.get('/:licenceplate/appointment');
 
 //get all evaluations from a car
-router.get('/:licenceplate/evaluation');
+//router.get('/:licenceplate/evaluation');
 
 //get evaluations of an specific test from a car
-router.get('/:licenceplate/evaluation/:testId');
+//router.get('/:licenceplate/evaluation/:testId');
 
 
 //router.post('/',);
@@ -35,9 +35,9 @@ router.get('/:licenceplate/evaluation/:testId');
 //router.put('/',);
 
 //Delete all evaluations from a car
-router.delete('/:licenceplate',);
+//router.delete('/:licenceplate',);
 
 //Delete a specific evaluation from a car
-router.delete('/:licenceplate/:testId',);
+//router.delete('/:licenceplate/:testId',);
 
 module.exports = router;

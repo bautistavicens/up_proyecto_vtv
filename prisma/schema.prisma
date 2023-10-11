@@ -1,11 +1,101 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model appointment {
+  appointment_id Int      @id @default(autoincrement())
+  date           DateTime @db.DateTime(0)
+  status_id      Int      @db.SmallInt
+  branch_id      Int      @db.SmallInt
+  status         status   @relation(fields: [status_id], references: [status_id], onDelete: Cascade, map: "appointment_ibfk_1")
+  branch         branch   @relation(fields: [branch_id], references: [branch_id], onDelete: Cascade, map: "appointment_ibfk_2")
+
+  @@index([branch_id], map: "branch_id")
+  @@index([status_id], map: "status_id")
+}
+
+model branch {
+  branch_id    Int           @id @default(autoincrement()) @db.SmallInt
+  province     String        @db.VarChar(60)
+  city         String        @db.VarChar(60)
+  zip_code     String        @db.VarChar(60)
+  address      String        @db.VarChar(60)
+  area_number  String?       @db.VarChar(60)
+  phone_number String?       @db.VarChar(30)
+  email        String?       @db.VarChar(320)
+  appointment  appointment[]
+  evaluation   evaluation[]
+}
+
+model employee {
+  employee_id       Int               @id @default(autoincrement()) @db.SmallInt
+  first_name        String            @db.VarChar(60)
+  last_name         String            @db.VarChar(60)
+  email             String            @unique(map: "email") @db.VarChar(320)
+  password          String            @db.VarChar(70)
+  last_login        DateTime?         @default(now()) @db.DateTime(0)
+  category_id       Int               @db.SmallInt
+  employee_category employee_category @relation(fields: [category_id], references: [category_id], onDelete: Cascade, map: "employee_ibfk_1")
+  evaluation        evaluation[]
+
+  @@index([category_id], map: "category_id")
+}
+
+model employee_category {
+  category_id Int        @id @default(autoincrement()) @db.SmallInt
+  name        String     @unique(map: "name") @db.VarChar(40)
+  employee    employee[]
+}
+
+model evaluation {
+  license_plate String   @db.VarChar(8)
+  test_id       Int      @db.SmallInt
+  score         Int      @db.SmallInt
+  employee_id   Int      @db.SmallInt
+  branch_id     Int      @db.SmallInt
+  vehicle       vehicle  @relation(fields: [license_plate], references: [license_plate], onDelete: Cascade, map: "evaluation_ibfk_1")
+  test          test     @relation(fields: [test_id], references: [test_id], onDelete: Cascade, map: "evaluation_ibfk_2")
+  employee      employee @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade, map: "evaluation_ibfk_3")
+  branch        branch   @relation(fields: [branch_id], references: [branch_id], onDelete: Cascade, map: "evaluation_ibfk_4")
+
+  @@id([license_plate, test_id])
+  @@index([branch_id], map: "branch_id")
+  @@index([employee_id], map: "employee_id")
+  @@index([test_id], map: "test_id")
+}
+
+model origin {
+  origin_id   Int       @id @db.SmallInt
+  description String    @db.VarChar(80)
+  vehicle     vehicle[]
+}
+
+model status {
+  status_id   Int           @id @default(autoincrement()) @db.SmallInt
+  description String        @unique(map: "description") @db.VarChar(40)
+  appointment appointment[]
+}
+
+model test {
+  test_id     Int          @id @default(autoincrement()) @db.SmallInt
+  description String       @db.VarChar(80)
+  evaluation  evaluation[]
+}
+
+model vehicle {
+  license_plate    String       @id @db.VarChar(8)
+  owner_first_name String       @db.VarChar(60)
+  owner_last_name  String       @db.VarChar(60)
+  owner_dni        String       @db.VarChar(12)
+  origin_id        Int          @db.SmallInt
+  appointment_id   Int?
+  evaluation       evaluation[]
+  origin           origin       @relation(fields: [origin_id], references: [origin_id], onDelete: Cascade, map: "vehicle_ibfk_1")
+
+  @@index([origin_id], map: "origin_id")
 }

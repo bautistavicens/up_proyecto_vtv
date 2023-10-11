@@ -9,21 +9,21 @@ const router = express.Router();
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 //Get all evaluations
-router.get('/',);
+//router.get('/',);
 
 //Get all test of an evaluation
-router.get('/test',);
+//router.get('/test',);
 
 //Get all free appointments from branch
-router.get('/available/:branch',);
+//router.get('/available/:branch',);
 
 //Get all free appointments from a branch on specific date
-router.get('/available/:branch/:date',);
+//router.get('/available/:branch/:date',);
 
 //Get all appointments from specific date
-router.get('/:date',);
+//router.get('/:date',);
 
 
 
 //add an available appointment to branch
-router.post('/:branch')
+//router.post('/:branch')

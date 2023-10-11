@@ -9,22 +9,22 @@ const router = express.Router();
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 //Get all appointments 
-router.get('/',);
+//router.get('/',);
 
 //Get all appointment possible status
-router.get('/status',);
+//router.get('/status',);
 
 //Get all free appointments
-router.get('/available',);
+//router.get('/available',);
 
 //Get all free appointments from branch
-router.get('/available/:branch',);
+//router.get('/available/:branch',);
 
 //Get all free appointments from a branch on specific date
-router.get('/available/:branch/:date',);
+//router.get('/available/:branch/:date',);
 
 //Get all appointments from specific date
-router.get('/:date',);
+//router.get('/:date',);
 
 //add an available appointment to branch
-router.post('/:branch'),
+//router.post('/:branch');
