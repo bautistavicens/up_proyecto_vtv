@@ -278,7 +278,9 @@ CREATE TABLE `vehicle`(
 	`appointment_id` INT DEFAULT NULL,
     
     PRIMARY KEY (`license_plate`),
-    FOREIGN KEY (`origin_id`) REFERENCES origin(`origin_id`) ON UPDATE CASCADE ON DELETE CASCADE
+    UNIQUE(`license_plate`),
+    FOREIGN KEY (`origin_id`) REFERENCES origin(`origin_id`) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (`appointment_id`) REFERENCES appointment(`appointment_id`) ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

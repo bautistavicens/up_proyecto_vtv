@@ -8,6 +8,12 @@ const express = require("express");
 const router = express.Router();
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
+
+/************************* Controller ****************************/
+const appointmentController = require('../controllers/contactApiController.js');
+/*****************************************************************/
+
+
 //Get all appointments 
 //router.get('/',);
 
@@ -24,7 +30,7 @@ const router = express.Router();
 //router.get('/available/:branch/:date',);
 
 //Get all appointments from specific date
-//router.get('/:date',);
+//router.get('/:date');
 
 //add an available appointment to branch
 //router.post('/:branch');

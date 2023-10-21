@@ -8,20 +8,21 @@ const express = require("express");
 const router = express.Router();
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
-//List all cars
-router.get('/', (req, res) => {
-    res.json("Getting all cars from all branches...");
-});
 
-//get car by licenseplate
-router.get('/:licenceplate', (req, res) => {
-    const licenceplate = req.params.licenceplate
-    res.json("Getting car with licenceplate"+ licenceplate);
-});
+/************************* Controller ****************************/
+const vehicleController = require('../controllers/vehicleController.js');
+/*****************************************************************/
 
 
-//get appointment date data from a specific car
-//router.get('/:licenceplate/appointment');
+//List all vehicles
+router.get('/', vehicleController.getAllVehicles);
+
+//get vehicle by licenseplate
+router.get('/:licenseplate',vehicleController.getVehicleByLicensePlate);
+
+
+//get appointment data from a specific car
+router.get('/:licenseplate/appointment', vehicleController.getCarAppointment);
 
 //get all evaluations from a car
 //router.get('/:licenceplate/evaluation');

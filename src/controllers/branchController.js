@@ -114,7 +114,58 @@ const branchController = {
             //common errors handling (500 & 503)
             return commonErrorsHandling(error, req, res);
         }
-    }
+    },
+
+    getAvailableAppointmentsOnDate: async (req, res) =>{
+        try{
+            //Generate Date object (min: 00:00:00 & max: 23:59:00) to search 
+            const minInDate = new Date(req.params.date + "T00:00:00.000Z");
+            const maxInDate = new Date(req.params.date + "T23:59:00.000Z");
+
+            //parse id param to int
+            const branchId = parseInt(req.params.id);
+
+
+            //Get all appointments
+            const appointments = await prisma.appointment.findMany({
+                where:{
+                    date:{
+                        //Greater than or equals to
+                        gte: minInDate,
+                        //Less than or equals to
+                        lte: maxInDate
+                    }, 
+                    branch_id: branchId
+                },
+   
+            });
+
+            //Appointments exists
+            if(appointments  != null && appointments.length > 0){
+                
+                //Send data
+                return res.status(200).json({
+                    status: 200,
+                    msg: "OK",
+                    data: appointments,
+    
+                });
+            }
+
+            //Appointments doesn´t exist
+            return res.status(404).json({
+                msg: "Not Found",
+                status: 404
+            });
+        } 
+        catch(error){
+            console.log(error);
+            //common errors handling (500 & 503)
+            return commonErrorsHandling(error, req, res);
+        }
+    },
+
+    
 }
 
 module.exports = branchController;

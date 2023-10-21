@@ -8,12 +8,13 @@ datasource db {
 }
 
 model appointment {
-  appointment_id Int      @id @default(autoincrement())
-  date           DateTime @db.DateTime(0)
-  status_id      Int      @db.SmallInt
-  branch_id      Int      @db.SmallInt
-  status         status   @relation(fields: [status_id], references: [status_id], onDelete: Cascade, map: "appointment_ibfk_1")
-  branch         branch   @relation(fields: [branch_id], references: [branch_id], onDelete: Cascade, map: "appointment_ibfk_2")
+  appointment_id Int       @id @default(autoincrement())
+  date           DateTime  @db.DateTime(0)
+  status_id      Int       @db.SmallInt
+  branch_id      Int       @db.SmallInt
+  status         status    @relation(fields: [status_id], references: [status_id], onDelete: Cascade, map: "appointment_ibfk_1")
+  branch         branch    @relation(fields: [branch_id], references: [branch_id], onDelete: Cascade, map: "appointment_ibfk_2")
+  vehicle        vehicle[]
 
   @@index([branch_id], map: "branch_id")
   @@index([status_id], map: "status_id")
@@ -88,7 +89,7 @@ model test {
 }
 
 model vehicle {
-  license_plate    String       @id @db.VarChar(8)
+  license_plate    String       @id @unique(map: "license_plate") @db.VarChar(8)
   owner_first_name String       @db.VarChar(60)
   owner_last_name  String       @db.VarChar(60)
   owner_dni        String       @db.VarChar(12)
@@ -96,6 +97,8 @@ model vehicle {
   appointment_id   Int?
   evaluation       evaluation[]
   origin           origin       @relation(fields: [origin_id], references: [origin_id], onDelete: Cascade, map: "vehicle_ibfk_1")
+  appointment      appointment? @relation(fields: [appointment_id], references: [appointment_id], onDelete: Cascade, map: "vehicle_ibfk_2")
 
   @@index([origin_id], map: "origin_id")
+  @@index([appointment_id], map: "appointment_id")
 }
