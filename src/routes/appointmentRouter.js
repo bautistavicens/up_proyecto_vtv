@@ -10,7 +10,7 @@ const router = express.Router();
 
 
 /************************* Controller ****************************/
-const appointmentController = require('../controllers/contactApiController.js');
+const appointmentController = require('../controllers/appointmentController.js');
 /*****************************************************************/
 
 
@@ -18,7 +18,7 @@ const appointmentController = require('../controllers/contactApiController.js');
 //router.get('/',);
 
 //Get all appointment possible status
-//router.get('/status',);
+router.get('/status', appointmentController.getAllAppointmentPossibleStatus);
 
 //Get all free appointments
 //router.get('/available',);
@@ -33,4 +33,15 @@ const appointmentController = require('../controllers/contactApiController.js');
 //router.get('/:date');
 
 //add an available appointment to branch
-//router.post('/:branch');
+//router.post('/');
+
+//take an available appointment
+router.post('/:id', appointmentController.bookAnAppointment);
+
+//cancell an appointment
+router.put('/:id/cancel', appointmentController.cancelAnAppointment);
+
+//delete an appointment
+router.delete('/:id', appointmentController.deleteAnAppointment);
+
+module.exports= router;

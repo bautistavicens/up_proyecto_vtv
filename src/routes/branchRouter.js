@@ -18,6 +18,9 @@ router.get('/', branchController.listAllBranches);
 //get branch by id
 router.get('/:id', branchController.searchBranchById); 
 
+//get available appointments from specific branch
+router.get('/:id/appointment/available/', branchController.getAvailableAppointments);
+
 //get available appointments from specific branch on specific date
 router.get('/:id/appointment/available/:date', branchController.getAvailableAppointmentsOnDate);
 
