@@ -10,15 +10,19 @@ const router = express.Router();
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 const branchRouter = require('./branchRouter');
-const carRouter = require('./carRouter');
+const vehicleRouter = require('./vehicleRouter');
 const appointmentRouter = require('./appointmentRouter');
+const evaluationRouter = require('./evaluationRouter');
+
 
 /*---------------------- Routes ----------------------*/
 router.use('/branch', branchRouter);
 
-router.use('/vehicle', carRouter);
+router.use('/vehicle', vehicleRouter);
 
 router.use('/appointment', appointmentRouter);
+
+router.use('/evaluation', evaluationRouter);
 
 //router.use('/employee');
 

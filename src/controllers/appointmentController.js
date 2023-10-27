@@ -38,6 +38,78 @@ const appointmentController = {
         }
     },
 
+    createAvailableAppointmentOnDate: async (req, res) =>{
+        try{
+            //Construct Date
+            const inDate = new Date(parseInt(req.body.year), parseInt(req.body.month) - 1, parseInt(req.body.day), parseInt(req.body.hours), parseInt(req.body.minutes));
+            console.log(inDate);
+            //Get free status value to contrast with db data.
+            const freeStatus = process.env.APPOINTMENT_STATUS_LIBRE;
+
+            //parse id param to int
+            const branchId = parseInt(req.body.branchId);
+
+            //Get status id of "free"
+            const status = await prisma.status.findUnique({
+                where:{
+                    description: freeStatus
+                },
+                select:{
+                    status_id: true
+                }
+            });
+
+            //status found
+            if(status  != null){
+                //Create new appointment
+                let appointment = await prisma.appointment.create({
+                    data:{
+                        date: inDate,
+                        branch_id: branchId,
+                        status_id: status.status_id
+                    },
+                });
+                
+                //Appointment created successfully
+                if(appointment != null){
+
+                    //Format Date
+                    //appointment.date = appointment.date.toLocaleString(); 
+
+                    //Send data
+                    return res.status(200).json({
+                        status: 200,
+                        msg: "OK",
+                        data: appointment,
+        
+                    });
+                }
+                //couldn´t create appointment
+                else{
+                    //Send error
+                    return res.status(500).json({
+                        status: 500,
+                        msg: "Internal Server Error",
+                        errorMsg:"No se ha podido registrar el turno"
+                    }); 
+                }
+            }
+
+            //"free" status not found
+            return res.status(404).json({
+                msg: "Not Found",
+                status: 404
+            });
+        
+        }
+        catch(error){
+            console.log(error);
+            //common errors handling (500 & 503)
+            return commonErrorsHandling(error, req, res);
+        }
+    },
+
+
     bookAnAppointment: async (req, res) =>{
         try{
             //parse id param to int
@@ -120,7 +192,7 @@ const appointmentController = {
                 //Appointment is already taken
                 else{
                     //Send error
-                    return res.status(200).json({
+                    return res.status(409).json({
                         status: 409,
                         msg: "Conflict",
                         errorMsg: "El turno ya ha sido tomado"
@@ -258,7 +330,7 @@ const appointmentController = {
                 //Appointment has antoher status instead of free
                 else{
                     //Send error
-                    return res.status(200).json({
+                    return res.status(409).json({
                         status: 409,
                         msg: "Conflict",
                         errorMsg: "El turno debe estar LIBRE para poder ser eliminado"

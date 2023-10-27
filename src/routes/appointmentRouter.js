@@ -33,7 +33,7 @@ router.get('/status', appointmentController.getAllAppointmentPossibleStatus);
 //router.get('/:date');
 
 //add an available appointment to branch
-//router.post('/');
+router.post('/', appointmentController.createAvailableAppointmentOnDate);
 
 //take an available appointment
 router.post('/:id', appointmentController.bookAnAppointment);

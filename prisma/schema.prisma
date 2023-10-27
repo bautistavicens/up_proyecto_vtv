@@ -54,15 +54,16 @@ model employee_category {
 }
 
 model evaluation {
-  license_plate String   @db.VarChar(8)
-  test_id       Int      @db.SmallInt
-  score         Int      @db.SmallInt
-  employee_id   Int      @db.SmallInt
-  branch_id     Int      @db.SmallInt
-  vehicle       vehicle  @relation(fields: [license_plate], references: [license_plate], onDelete: Cascade, map: "evaluation_ibfk_1")
-  test          test     @relation(fields: [test_id], references: [test_id], onDelete: Cascade, map: "evaluation_ibfk_2")
-  employee      employee @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade, map: "evaluation_ibfk_3")
-  branch        branch   @relation(fields: [branch_id], references: [branch_id], onDelete: Cascade, map: "evaluation_ibfk_4")
+  license_plate String    @db.VarChar(8)
+  test_id       Int       @db.SmallInt
+  score         Int       @db.SmallInt
+  date          DateTime? @default(now()) @db.DateTime(0)
+  employee_id   Int       @db.SmallInt
+  branch_id     Int       @db.SmallInt
+  vehicle       vehicle   @relation(fields: [license_plate], references: [license_plate], onDelete: Cascade, map: "evaluation_ibfk_1")
+  test          test      @relation(fields: [test_id], references: [test_id], onDelete: Cascade, map: "evaluation_ibfk_2")
+  employee      employee  @relation(fields: [employee_id], references: [employee_id], onDelete: Cascade, map: "evaluation_ibfk_3")
+  branch        branch    @relation(fields: [branch_id], references: [branch_id], onDelete: Cascade, map: "evaluation_ibfk_4")
 
   @@id([license_plate, test_id])
   @@index([branch_id], map: "branch_id")

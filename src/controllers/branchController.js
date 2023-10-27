@@ -115,18 +115,138 @@ const branchController = {
             return commonErrorsHandling(error, req, res);
         }
     },
-    getAvailableAppointments: async (req, res) =>{
+
+    getAllAppointments:async (req, res) =>{
         try{
             //parse id param to int
             const branchId = parseInt(req.params.id);
 
+            //Get "page" and "limit" parameters from URL query
+            let {page} = req.query;
+
+            //if 'page' doesn't exist set 1
+            if(!page){
+                page = 1;
+            }
+
+            //For jumping
+            const skip = (page - 1) * 12;
+
+            //max limit to send
+            const limit = 12;
+
+            //count total amount of products in DB 
+            const totalAppointments= await prisma.appointment.count({
+                where:{
+                    branch_id: branchId
+                }
+            });
+
+            //calculate total pages for pagination.
+            const totalPages = totalAppointments > limit ? Math.ceil(totalAppointments / limit) : 1
 
             //Get all appointments
             const appointments = await prisma.appointment.findMany({
                 where:{
                     branch_id: branchId,
                 },
+                orderBy:{
+                    date: 'asc'
+                },
+                skip: skip,
+                take: limit
+            });
+
+            //Appointments exists
+            if(appointments  != null && appointments.length > 0){
+
+                //Send data
+                return res.status(200).json({
+                    status: 200,
+                    msg: "OK",
+                    totalPages: totalPages,
+                    data: appointments,
+
+                });
+            }
+
+            //Appointments doesn´t exist
+            return res.status(404).json({
+                msg: "Not Found",
+                status: 404
+            });
+        }
+        catch(error){
+            console.log(error);
+            //common errors handling (500 & 503)
+            return commonErrorsHandling(error, req, res);
+        }
+    },
+
+    getAllAppointmentsOnSpecificDate: async (req, res) => {
+        try{
+            //Generate Date object (min: 00:00:00 & max: 23:59:00) to search 
+            const minInDate = new Date(req.params.date + "T00:00:00.000Z");
+            const maxInDate = new Date(req.params.date + "T23:59:00.000Z");
+
+            //parse id param to int
+            const branchId = parseInt(req.params.id);
+
+            //Get all appointments
+            const appointments = await prisma.appointment.findMany({
+                where:{
+                    date:{
+                        //Greater than or equals to
+                        gte: minInDate,
+                        //Less than or equals to
+                        lte: maxInDate
+                    }, 
+                    branch_id: branchId,
+                },
    
+            });
+
+            //Appointments exists
+            if(appointments  != null && appointments.length > 0){
+                
+                //Send data
+                return res.status(200).json({
+                    status: 200,
+                    msg: "OK",
+                    data: appointments,
+    
+                });
+            }
+
+            //Appointments doesn´t exist
+            return res.status(404).json({
+                msg: "Not Found",
+                status: 404
+            });
+        }
+        catch(error){
+            console.log(error);
+            //common errors handling (500 & 503)
+            return commonErrorsHandling(error, req, res);
+        }     
+    },
+
+    getAvailableAppointments: async (req, res) =>{
+        try{
+            //parse id param to int
+            const branchId = parseInt(req.params.id);
+
+            //Get free status value to contrast with db data.
+            const freeStatus = process.env.APPOINTMENT_STATUS_LIBRE;
+
+            //Get all appointments
+            const appointments = await prisma.appointment.findMany({
+                where:{
+                    branch_id: branchId,
+                    status:{
+                        description: freeStatus
+                    }
+                }
             });
 
             //Appointments exists
@@ -163,6 +283,8 @@ const branchController = {
             //parse id param to int
             const branchId = parseInt(req.params.id);
 
+            //Get free status value to contrast with db data.
+            const freeStatus = process.env.APPOINTMENT_STATUS_LIBRE;
 
             //Get all appointments
             const appointments = await prisma.appointment.findMany({
@@ -173,7 +295,10 @@ const branchController = {
                         //Less than or equals to
                         lte: maxInDate
                     }, 
-                    branch_id: branchId
+                    branch_id: branchId,
+                    status:{
+                        description: freeStatus
+                    }
                 },
    
             });

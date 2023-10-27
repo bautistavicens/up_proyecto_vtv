@@ -8,11 +8,15 @@ const express = require("express");
 const router = express.Router();
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
+/************************* Controller ****************************/
+const evaluationController = require('../controllers/evaluationController.js');
+/*****************************************************************/
+
 //Get all evaluations
 //router.get('/',);
 
 //Get all test of an evaluation
-//router.get('/test',);
+router.get('/test', evaluationController.getTests);
 
 //Get all free appointments from branch
 //router.get('/available/:branch',);
@@ -27,3 +31,5 @@ const router = express.Router();
 
 //add an available appointment to branch
 //router.post('/:branch')
+
+module.exports = router;

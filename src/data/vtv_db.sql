@@ -343,6 +343,7 @@ CREATE TABLE `evaluation`(
 	`license_plate` VARCHAR(8) NOT NULL,
     `test_id` SMALLINT(3) NOT NULL,
 	`score` SMALLINT(3) NOT NULL,
+    `date` DATETIME DEFAULT NOW(),
     `employee_id` SMALLINT(3) NOT NULL,
     `branch_id`SMALLINT(3) NOT NULL,
     
