@@ -18,7 +18,7 @@ const appointmentController = require('../controllers/appointmentController.js')
 //router.get('/',);
 
 //Get all appointment possible status
-router.get('/status', appointmentController.getAllAppointmentPossibleStatus);
+router.get('/status', jwt,appointmentController.getAllAppointmentPossibleStatus);
 
 //Get all free appointments
 //router.get('/available',);
