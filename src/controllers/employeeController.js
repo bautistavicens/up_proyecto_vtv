@@ -122,6 +122,7 @@ const employeeController = {
         try{
             
             const saltRounds = parseInt(process.env.SALT_ROUNDS);
+            
             const employee = await prisma.employee.create({
                 data:{
                     first_name: req.body.firstName,

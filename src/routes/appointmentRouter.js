@@ -6,6 +6,9 @@ const express = require("express");
 
 //Router
 const router = express.Router();
+
+//jwtAuthVerify
+const jwtAuthVerify = require('../middlewares/jwtAuthVerify.js');
 /*+++++++++++++++++++++++++++++++++++++++++++++++++++*/
 
 
@@ -14,34 +17,20 @@ const appointmentController = require('../controllers/appointmentController.js')
 /*****************************************************************/
 
 
-//Get all appointments 
-//router.get('/',);
-
 //Get all appointment possible status
-router.get('/status', jwt,appointmentController.getAllAppointmentPossibleStatus);
+router.get('/status', jwtAuthVerify.verify, appointmentController.getAllAppointmentPossibleStatus);
 
-//Get all free appointments
-//router.get('/available',);
-
-//Get all free appointments from branch
-//router.get('/available/:branch',);
-
-//Get all free appointments from a branch on specific date
-//router.get('/available/:branch/:date',);
-
-//Get all appointments from specific date
-//router.get('/:date');
 
 //add an available appointment to branch
-router.post('/', appointmentController.createAvailableAppointmentOnDate);
+router.post('/', jwtAuthVerify.verify, appointmentController.createAvailableAppointmentOnDate);
 
 //take an available appointment
 router.post('/:id', appointmentController.bookAnAppointment);
 
-//cancell an appointment
-router.put('/:id/cancel', appointmentController.cancelAnAppointment);
+//cancel an appointment
+router.put('/:id/cancel', jwtAuthVerify.verify, appointmentController.cancelAnAppointment);
 
 //delete an appointment
-router.delete('/:id', appointmentController.deleteAnAppointment);
+router.delete('/:id', jwtAuthVerify.verify, appointmentController.deleteAnAppointment);
 
 module.exports= router;
