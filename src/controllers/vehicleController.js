@@ -179,6 +179,7 @@ const vehicleController = {
                     license_plate: true,
                     test:{
                         select:{
+                            test_id: true,
                             description: true
                         }
                     },
@@ -217,6 +218,147 @@ const vehicleController = {
             //common errors handling (500 & 503)
             return commonErrorsHandling(error, req, res);
         }       
+    },
+
+    getOneVehicleEvaluation: async (req, res) => {
+        try{
+            //Get car evaluations
+            const evaluation = await prisma.evaluation.findUnique({
+                where:{
+                    license_plate_test_id:{
+                        license_plate: req.params.licenseplate,
+                        test_id: parseInt(req.params.testid)
+                    }
+                },
+                select:{
+                    license_plate: true,
+                    test:{
+                        select:{
+                            description: true
+                        }
+                    },
+                    score: true,
+                    date: true,
+                    branch:{
+                        select:{
+                            province: true,
+                            city: true,
+                            address: true
+                        }
+                    }
+                }       
+            });
+            
+            //car evaluations exists
+            if(evaluation != null){
+    
+                //Send data
+                return res.status(200).json({
+                    status: 200,
+                    msg: "OK",
+                    data: evaluation,
+    
+                });
+            }
+
+            //Car evaluation doesn´t exist
+            return res.status(404).json({
+                msg: "Not Found",
+                status: 404
+            });
+        } 
+        catch(error){
+            console.log(error);
+            //common errors handling (500 & 503)
+            return commonErrorsHandling(error, req, res);
+        }       
+    },
+
+    cancelCarAppointment: async (req, res) => {
+        try{
+            //Get free status value to contrast with db data.
+            const freeStatus = process.env.APPOINTMENT_STATUS_LIBRE;
+            
+            //Get vehicle appointmentid
+            const vehicleAppointment = await prisma.vehicle.findUnique({
+                where:{
+                    license_plate: req.params.licenseplate,
+                    AND:[
+                        {owner_dni: req.body.ownerDNI}
+                    ]
+                },
+                select:{
+                    appointment_id: true
+                }
+            });
+
+            //Appointment exists
+            if(vehicleAppointment != null){
+
+                //Get appointment status id to book appointment
+                const status = await prisma.status.findUnique({
+                    where:{
+                        description: freeStatus
+                    },
+                    select:{
+                        status_id: true
+                    }
+                });
+
+                const deletedVehicle = await prisma.vehicle.delete({
+                    where:{
+                        license_plate: req.params.licenseplate
+                    }
+                });
+
+                const verifyVehicleDelete = deletedVehicle != null ? true : false;
+
+                //update appointment
+                const updatedAppointment = await prisma.appointment.update({
+                    where:{
+                        appointment_id: vehicleAppointment.appointment_id
+                    },
+                    data:{
+                        status_id: status.status_id
+                    }
+                });
+
+                if(updatedAppointment != null && verifyVehicleDelete == true){
+                    //Send data
+                    return res.status(200).json({
+                        status: 200,
+                        msg: "OK",
+                        data:[
+                            {updatedAppointment: updatedAppointment},
+                            {deletedVehicle: deletedVehicle}
+                        ]
+                    });
+                }
+
+                //Appointment doesn´t exist
+                return res.status(409).json({
+                    status: 409,
+                    msg: "Conflict",
+                    errorMsg:"Ha ocurrido un problema al liberar el turno o eliminar el vehiculo",
+                    data:[
+                        {updatedAppointment: updatedAppointment},
+                        {deletedVehicle: deletedVehicle}
+                    ]
+                });
+            }
+
+            //Appointment doesn´t exist
+            return res.status(404).json({
+                status: 404,
+                msg: "Not Found",
+                errorMsg:"No se ha encontrado ningun turno con los datos ingresados"
+            });
+        } 
+        catch(error){
+            console.log(error);
+            //common errors handling (500 & 503)
+            return commonErrorsHandling(error, req, res);
+        }   
     },
 
     deleteVehicle: async (req, res) => {

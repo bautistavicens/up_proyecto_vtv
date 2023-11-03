@@ -1,10 +1,5 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-const bcrypt = require('bcrypt');
-const { validationResult } = require('express-validator');
-
-//const jwtHelper = require('../../helpers/jwtHelper.js');
-//const generateRandomString = require('../../helpers/generateRandomString.js');
 const commonErrorsHandling = require('../utils/commonErrorsHandling.js');
 
 const branchController = {
