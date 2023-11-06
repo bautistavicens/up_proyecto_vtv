@@ -33,15 +33,11 @@ router.get('/:licenceplate/evaluation', jwtAuthVerify.verify, vehicleController.
 //get evaluations of an specific test from a car
 router.get('/:licenseplate/evaluation/:testid', jwtAuthVerify.verify, vehicleController.getOneVehicleEvaluation);
 
-
-//router.post('/',);
-
+//Cancel vehicle's appointment
 router.put('/:licenseplate/appointment/cancel', jwtAuthVerify.verify, vehicleController.cancelCarAppointment);
 
 //Delete all evaluations from a car
 router.delete('/:licenseplate', jwtAuthVerify.verify, vehicleController.deleteVehicle);
 
-//Delete a specific evaluation from a car
-//router.delete('/:licenceplate/:testId',);
 
 module.exports = router;

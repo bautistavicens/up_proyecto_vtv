@@ -21,8 +21,6 @@ router.get('/', jwtAuthVerify.verify, jwtAuthVerify.isAdmin, employeeController.
 //Get one employee by id
 router.get('/:id', jwtAuthVerify.verify, jwtAuthVerify.isAdmin, employeeController.getEmployeeById);
 
-//Get employee by first_name and last_name
-//router.get('/:firstname/:lastname',);
 
 //Register new user
 router.post('/register', jwtAuthVerify.verify, jwtAuthVerify.isAdmin, employeeController.register);
@@ -30,8 +28,6 @@ router.post('/register', jwtAuthVerify.verify, jwtAuthVerify.isAdmin, employeeCo
 //user log in
 router.post('/login', employeeController.login);
 
-//edit one user data
-//router.put('/:id', );
 
 //delete one user
 router.delete('/:id', jwtAuthVerify.verify, jwtAuthVerify.isAdmin, employeeController.deleteEmployee);
