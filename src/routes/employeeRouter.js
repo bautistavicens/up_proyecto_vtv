@@ -28,6 +28,7 @@ router.post('/register', jwtAuthVerify.verify, jwtAuthVerify.isAdmin, employeeCo
 //user log in
 router.post('/login', employeeController.login);
 
+router.put('/:id', jwtAuthVerify.verify, jwtAuthVerify.isAdmin, employeeController.editEmployee);
 
 //delete one user
 router.delete('/:id', jwtAuthVerify.verify, jwtAuthVerify.isAdmin, employeeController.deleteEmployee);

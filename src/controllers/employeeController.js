@@ -105,7 +105,7 @@ const employeeController = {
                 });
             }
 
-            //Branches doesn´t exist
+            //employee doesn´t exist
             return res.status(404).json({
                 msg: "Not Found",
                 status: 404
@@ -231,26 +231,91 @@ const employeeController = {
         }
     },
 
-    deleteEmployee: async (req, res) => {
+    editEmployee: async (req, res) => {
         try{
+            const saltRounds = parseInt(process.env.SALT_ROUNDS);
 
-            const employee = await prisma.employee.delete({
+            const employee = await prisma.employee.update({
                 where:{
                     employee_id: parseInt(req.params.id)
                 },
+                data:{
+                    first_name: req.body.firstName,
+                    last_name: req.body.lastName,
+                    email: req.body.email,
+                    password: bcrypt.hashSync(req.body.password, saltRounds),
+                    category_id: parseInt(req.body.categoryId)    
+                }
+            });
+
+            //Employee exists
+            if(employee != null){
+
+                //delete last_login property before sending
+                delete employee.last_login;
+
+                //Send data
+                return res.status(201).json({
+                    msg: "Created",
+                    status: 201,
+                    data: employee
+                });
+            }
+            //employee doesn´t exist
+            return res.status(404).json({
+                msg: "Not Found",
+                status: 404
+            });
+        }
+        catch(error){
+            //common errors handling (500 & 503)
+            return commonErrorsHandling(error, req, res); 
+        }
+    },
+
+    deleteEmployee: async (req, res) => {
+        try{
+            //Fin employee and get email
+            const employee = await prisma.employee.findUnique({
+                where:{
+                    employee_id: parseInt(req.params.id)
+                },
+                select:{
+                    email: true
+                }
             });
 
             //employee exists
             if(employee != null){
-                //delete password property before sending
-                delete employee.password;
 
-                //Send data
-                return res.status(200).json({
-                    msg: "OK",
-                    status: 200,
-                    data: employee
-                });
+                /*Verify if the employee to delete is not the same that is doing
+                the delete request*/
+                if(employee.email != req.employee.email){
+
+                    //Delete employee
+                    const deletedEmployee = await prisma.employee.delete({
+                        where:{
+                            employee_id: parseInt(req.params.id)
+                        },
+                    });
+
+                    //delete password property before sending
+                    delete deletedEmployee.password;
+
+                    //Send data
+                    return res.status(200).json({
+                        msg: "OK",
+                        status: 200,
+                        data: deletedEmployee
+                    });
+                }
+
+                //user is trying to delete it self
+                return res.status(406).json({
+                    msg: 'Not Acceptable',
+                    status: 406, 
+                }); 
+
             }
 
             //Branches doesn´t exist
@@ -260,6 +325,7 @@ const employeeController = {
             });
         }
         catch(error){
+            console.log(error)
             //common errors handling (500 & 503)
             return commonErrorsHandling(error, req, res);
         }
