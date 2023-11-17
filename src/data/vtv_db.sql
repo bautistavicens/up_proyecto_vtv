@@ -274,12 +274,12 @@ CREATE TABLE `vehicle`(
     `owner_first_name` VARCHAR(60) NOT NULL,
     `owner_last_name` VARCHAR(60) NOT NULL,
     `owner_dni` VARCHAR(12) NOT NULL,
-	`origin_id` SMALLINT(3) NOT NULL,
+	`origin_id` SMALLINT(3),
 	`appointment_id` INT DEFAULT NULL,
     
     PRIMARY KEY (`license_plate`),
     UNIQUE(`license_plate`),
-    FOREIGN KEY (`origin_id`) REFERENCES origin(`origin_id`) ON UPDATE CASCADE ON DELETE NO ACTION,
+    FOREIGN KEY (`origin_id`) REFERENCES origin(`origin_id`) ON UPDATE CASCADE ON DELETE SET NULL,
     FOREIGN KEY (`appointment_id`) REFERENCES appointment(`appointment_id`) ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -344,13 +344,13 @@ CREATE TABLE `evaluation`(
     `test_id` SMALLINT(3) NOT NULL,
 	`score` SMALLINT(3) NOT NULL,
     `date` DATETIME DEFAULT NOW(),
-    `employee_id` SMALLINT(3) NOT NULL,
+    `employee_id` SMALLINT(3),
     `branch_id`SMALLINT(3) NOT NULL,
     
 	PRIMARY KEY (`license_plate`, `test_id`),
 	FOREIGN KEY (`license_plate`) REFERENCES vehicle(`license_plate`) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (`test_id`) REFERENCES test(`test_id`) ON UPDATE CASCADE ON DELETE CASCADE,
-	FOREIGN KEY (`employee_id`) REFERENCES employee(`employee_id`) ON UPDATE CASCADE ON DELETE NO ACTION,
+	FOREIGN KEY (`employee_id`) REFERENCES employee(`employee_id`) ON UPDATE CASCADE ON DELETE SET NULL,
 	FOREIGN KEY (`branch_id`) REFERENCES branch(`branch_id`) ON UPDATE CASCADE ON DELETE CASCADE
     
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

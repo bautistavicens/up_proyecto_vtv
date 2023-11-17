@@ -314,7 +314,7 @@ const employeeController = {
                 return res.status(406).json({
                     msg: 'Not Acceptable',
                     status: 406, 
-                }); 
+                });
 
             }
 
